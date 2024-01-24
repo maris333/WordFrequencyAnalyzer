@@ -2,9 +2,6 @@ import requests
 import re
 from typing import List, Tuple
 
-from bs4 import BeautifulSoup
-from requests import RequestException
-
 
 def open_url(url: str) -> str:
     """
@@ -20,7 +17,7 @@ def open_url(url: str) -> str:
         response = requests.get(url)
         response.raise_for_status()
         return response.text
-    except RequestException as e:
+    except requests.RequestException as e:
         print(f"Error opening URL: {e}")
         return ""
 
@@ -102,7 +99,7 @@ def save_to_file(most_common_words: List[Tuple[str, int]], filename: str = 'resu
 
 def analyze_web_page(url: str) -> None:
     """
-    Analyze a web page by opening the URL, extracting text, cleaning HTML, preprocessing text,
+    Analyze a web page by opening the URL, extracting text, cleaning HTML, displaying text,
     analyzing text, and saving results to a file.
 
     Parameters:

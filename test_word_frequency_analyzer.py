@@ -17,19 +17,23 @@ class TestWebPageAnalyzer(unittest.TestCase):
         self.assertEqual(result, '<html><body>Hello, World!</body></html>')
 
     def test_extract_text(self):
-        html_content = '<html><body>Hello, World!</body></html>'
+        html_content = "<html><head><style>body{background-color:#f00;}</style><script>alert('Hello, World!');" \
+                       "</script></head><body><h1>This is a short document</h1></body></html>"
+
         result = extract_text(html_content)
 
-        self.assertEqual(result, 'Hello, World!')
+        self.assertEqual(result, 'This is a short document')
 
     def test_clean_text(self):
-        raw_text = 'Hello, World! 123 #$%^'
+        raw_text = 'Hello, World! 123 #$%^.?,'
+
         result = clean_text(raw_text)
 
         self.assertEqual(result, 'Hello World 123 ')
 
     def test_analyze_words(self):
         text = 'apple banana apple orange banana'
+
         result = analyze_words(text)
 
         expected_result = [('apple', 2), ('banana', 2), ('orange', 1)]
@@ -39,23 +43,21 @@ class TestWebPageAnalyzer(unittest.TestCase):
     @patch('builtins.print')
     def test_display_results(self, mock_print):
         most_common_words = [('apple', 2), ('banana', 2), ('orange', 1)]
+
         display_results(most_common_words)
 
-        expected_calls = [
-            call('apple : 2'),
-            call('banana : 2'),
-            call('orange : 1'),
-        ]
+        expected_calls = [call('apple : 2'), call('banana : 2'), call('orange : 1')]
 
         mock_print.assert_has_calls(expected_calls, any_order=False)
 
     @patch('word_frequency_analyzer.open', create=True)
     def test_save_to_file(self, mock_open):
         most_common_words = [('apple', 2), ('banana', 2), ('orange', 1)]
+
         mock_file = mock_open.return_value.__enter__.return_value
 
         save_to_file(most_common_words, filename='test_results.txt')
 
         expected_calls = [call('apple: 2\n'), call('banana: 2\n'), call('orange: 1\n')]
-        for expected_call in expected_calls:
-            self.assertIn(expected_call, mock_file.write.call_args_list)
+
+        self.assertEquals(expected_calls, mock_file.write.call_args_list)

@@ -60,4 +60,4 @@ class TestWebPageAnalyzer(unittest.TestCase):
 
         expected_calls = [call('apple: 2\n'), call('banana: 2\n'), call('orange: 1\n')]
 
-        self.assertEquals(expected_calls, mock_file.write.call_args_list)
+        self.assertEqual(expected_calls, mock_file.write.call_args_list)

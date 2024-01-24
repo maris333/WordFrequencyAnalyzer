@@ -2,6 +2,7 @@ import requests
 import re
 from typing import List, Tuple
 
+from bs4 import BeautifulSoup
 from requests import RequestException
 
 
@@ -62,11 +63,6 @@ def analyze_words(text: str) -> List[Tuple[str, int]]:
     list: A list of tuples containing words and their respective counts.
     """
     occs = {}
-
-    punctuations_marks = (",", ".")
-
-    for mark in punctuations_marks:
-        text = text.replace(mark, "")
 
     for word in text.split():
         if word in occs.keys():
